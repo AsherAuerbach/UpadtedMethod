@@ -36,7 +36,7 @@ $ScriptsDir = Join-Path $ProjectRoot "scripts"
 function Show-Help {
     Write-Host ""
     Write-Host "=== UpadtedMethod - DLL Injection Project ===" -ForegroundColor Magenta
-    Write-Host "Windows DLL hook library with Python injector for bypassing Respondus LockDown Browser" -ForegroundColor Gray
+    Write-Host "Windows DLL hook library with Python injector for testing Respondus LockDown Browser security" -ForegroundColor Gray
     Write-Host ""
 
     Write-Host "USAGE:" -ForegroundColor Yellow
@@ -55,13 +55,16 @@ function Show-Help {
     Write-Host ""
 
     Write-Host "OPTIONS:" -ForegroundColor Yellow
-    Write-Host "  -Configuration <Debug|Release>  " -ForegroundColor Gray -NoNewline; Write-Host "Build configuration (default: Release)"
-    Write-Host "  -Platform <x86|x64>             " -ForegroundColor Gray -NoNewline; Write-Host "Target platform (default: x64)"
-    Write-Host "  -SkipCpp                        " -ForegroundColor Gray -NoNewline; Write-Host "Skip C++ DLL build"
-    Write-Host "  -SkipPython                     " -ForegroundColor Gray -NoNewline; Write-Host "Skip Python environment setup"
-    Write-Host "  -Clean                          " -ForegroundColor Gray -NoNewline; Write-Host "Clean before building"
-    Write-Host "  -NoBuild                        " -ForegroundColor Gray -NoNewline; Write-Host "Run without building (for 'run' command)"
-    Write-Host "  -SafeMode                       " -ForegroundColor Gray -NoNewline; Write-Host "Skip dangerous operations in tests"
+    Write-Host "  build -Configuration <Debug|Release>" -ForegroundColor Gray -NoNewline; Write-Host "Build configuration (default: Release)"
+    Write-Host "  build -Platform <x86|x64>       " -ForegroundColor Gray -NoNewline; Write-Host "Target platform (default: x64)"
+    Write-Host "  build -SkipCpp                  " -ForegroundColor Gray -NoNewline; Write-Host "Skip C++ DLL build"
+    Write-Host "  build -SkipPython               " -ForegroundColor Gray -NoNewline; Write-Host "Skip Python environment setup"
+    Write-Host "  build -Clean                    " -ForegroundColor Gray -NoNewline; Write-Host "Clean before building"
+    Write-Host "  run -NoBuild                    " -ForegroundColor Gray -NoNewline; Write-Host "Run without building"
+    Write-Host "  test -SafeMode                  " -ForegroundColor Gray -NoNewline; Write-Host "Skip dangerous operations in tests"
+    Write-Host "  install-deps -DevTools          " -ForegroundColor Gray -NoNewline; Write-Host "Install development tools including Git/Python"
+    Write-Host "  install-deps -InstallRecommended" -ForegroundColor Gray -NoNewline; Write-Host "Install recommended dev tools (VS Code, etc.)"
+    Write-Host "  install-deps -All               " -ForegroundColor Gray -NoNewline; Write-Host "Install everything (DevTools + InstallRecommended)"
     Write-Host ""
 
     Write-Host "EXAMPLES:" -ForegroundColor Yellow
@@ -70,7 +73,10 @@ function Show-Help {
     Write-Host "  .\build.ps1 run                 " -ForegroundColor Gray -NoNewline; Write-Host "# Build and run injector"
     Write-Host "  .\build.ps1 run -NoBuild        " -ForegroundColor Gray -NoNewline; Write-Host "# Run injector without building"
     Write-Host "  .\build.ps1 clean               " -ForegroundColor Gray -NoNewline; Write-Host "# Clean and rebuild"
-    Write-Host "  .\build.ps1 install-deps        " -ForegroundColor Gray -NoNewline; Write-Host "# Install Visual Studio & tools"
+    Write-Host "  .\build.ps1 install-deps        " -ForegroundColor Gray -NoNewline; Write-Host "# Install core tools only"
+    Write-Host "  .\build.ps1 install-deps -DevTools" -ForegroundColor Gray -NoNewline; Write-Host "# Install dev tools"
+    Write-Host "  .\build.ps1 install-deps -InstallRecommended" -ForegroundColor Gray -NoNewline; Write-Host "  # Add dev tools"
+    Write-Host "  .\build.ps1 install-deps -All   " -ForegroundColor Gray -NoNewline; Write-Host "# Install everything"
     Write-Host "  .\build.ps1 test                " -ForegroundColor Gray -NoNewline; Write-Host "# Run all tests"
     Write-Host "  .\build.ps1 test -SafeMode      " -ForegroundColor Gray -NoNewline; Write-Host "# Run tests safely"
     Write-Host ""
@@ -145,7 +151,14 @@ function Invoke-Setup {
 
 function Invoke-InstallDeps {
     Write-Host "=== Installing Development Dependencies ===" -ForegroundColor Magenta
-    & (Join-Path $ScriptsDir "install-dependencies.ps1")
+
+    $InstallArgs = @()
+    if ($All) { $InstallArgs += "-All" }
+    elseif ($DevTools) { $InstallArgs += "-DevTools" }
+    if ($InstallRecommended -and -not $All) { $InstallArgs += "-InstallRecommended" }
+    if ($script:VerbosePreference -eq "Continue") { $InstallArgs += "-Verbose" }
+
+    & (Join-Path $ScriptsDir "install-dependencies.ps1") @InstallArgs
     return $LASTEXITCODE
 }
 

@@ -1,12 +1,21 @@
 # UpadtedMethod 2025
-An advanced DLL injection framework for bypassing Respondus LockDown Browser restrictions.
+An advanced DLL injection framework for testing Respondus LockDown Browser security mechanisms.
 
 ## 🚀 Quick Start
 
 **Option 1: Automated Setup**
 ```powershell
-# Install development dependencies (one-time setup)
+# Install core dependencies only (Visual Studio Build Tools + Windows SDK)
 .\build.ps1 install-deps
+
+# OR install dev tools (includes Git + Python)
+.\build.ps1 install-deps -DevTools
+
+# OR install with recommended dev tools (VS Code, PowerShell 7, Terminal)
+.\build.ps1 install-deps -DevTools -InstallRecommended
+
+# OR install everything (shortcut for above)
+.\build.ps1 install-deps -All
 
 # Build and run
 .\build.ps1 run
@@ -28,10 +37,10 @@ An advanced DLL injection framework for bypassing Respondus LockDown Browser res
 
 ## ✨ Features
 
-### DLL Bypasses
-- ✅ **Window Focus Control** - Bypass forced window focus
-- ✅ **Process Termination Block** - Prevent application closure
-- ✅ **Clipboard Protection** - Bypass clipboard clearing
+### Security Testing Features
+- ✅ **Window Focus Control** - Test forced window focus restrictions
+- ✅ **Process Termination Block** - Test application closure prevention
+- ✅ **Clipboard Protection** - Test clipboard clearing restrictions
 - ✅ **Alt-Tab Freedom** - Enable window switching
 - ✅ **Screenshot Capability** - Allow screen capture tools
 
@@ -86,6 +95,46 @@ UpadtedMethod/
 - **Python**: 3.11+ (with pip)
 - **PowerShell**: 5.1+ or PowerShell 7+
 
+## 📦 Installation Options
+
+### 🎯 Installation Modes
+
+**Core Only (Default)**
+```powershell
+.\build.ps1 install-deps
+```
+- Visual Studio Build Tools 2022
+- Windows 10/11 SDK
+- *Best for: Users who already have Git and Python*
+
+**Dev Tools**
+```powershell
+.\build.ps1 install-deps -DevTools
+```
+- Core tools +
+- Git for Windows
+- Python 3.11
+- *Best for: Fresh development setup*
+
+**Full Development Environment**
+```powershell
+.\build.ps1 install-deps -DevTools -InstallRecommended
+# OR use the shortcut:
+.\build.ps1 install-deps -All
+```
+- Dev tools +
+- Visual Studio Code
+- PowerShell 7
+- Windows Terminal
+- *Best for: Complete development workstation*
+
+**Custom Options**
+```powershell
+.\build.ps1 install-deps -InstallRecommended    # Core + dev tools only
+.\build.ps1 install-deps -SkipVisualStudio     # Skip VS Build Tools
+.\scripts\install-dependencies.ps1 -Help       # Show all options
+```
+
 ## 📦 Installation
 
 ### 🎯 One-Command Setup
@@ -93,7 +142,9 @@ UpadtedMethod/
 # Clone and setup everything
 git clone https://github.com/AsherAuerbach/UpadtedMethod.git
 cd UpadtedMethod
-.\build.ps1 install-deps
+
+# Install all dependencies (recommended for new users)
+.\build.ps1 install-deps -All
 .\build.ps1 build
 ```
 
@@ -101,10 +152,16 @@ cd UpadtedMethod
 
 1. **Install Dependencies**
    ```powershell
-   # Option A: Automated (WinGet)
+   # Option A: Core tools only (minimal setup)
    .\build.ps1 install-deps
 
-   # Option B: Manual
+   # Option B: Dev tools (includes Git + Python)
+   .\build.ps1 install-deps -DevTools
+
+   # Option C: Full development environment
+   .\build.ps1 install-deps -All
+
+   # Option D: Manual installation
    # - Install Visual Studio 2022 Community or Build Tools
    # - Install Python 3.11+
    # - Install Git
@@ -127,6 +184,12 @@ cd UpadtedMethod
 # Show help and available commands
 .\build.ps1 help
 
+# Install dependencies (various modes)
+.\build.ps1 install-deps                    # Core only
+.\build.ps1 install-deps -DevTools          # Dev tools
+.\build.ps1 install-deps -InstallRecommended # Add dev tools
+.\build.ps1 install-deps -All               # Everything
+
 # Build everything (Release mode)
 .\build.ps1 build
 
@@ -141,6 +204,9 @@ cd UpadtedMethod
 
 # Clean and rebuild
 .\build.ps1 clean
+
+# Run comprehensive tests
+.\build.ps1 test
 
 # Development mode (Debug + Run)
 .\build.ps1 dev
@@ -179,11 +245,11 @@ cd UpadtedMethod
 - **Runtime Control**: Toggle hooks with keyboard shortcuts
 - **Clean Restoration**: Properly restore original functions
 
-### Bypass Techniques
-- **Focus Hijacking Prevention**: Block `SetFocus`, `SetWindowPos`, `BringWindowToTop`
-- **Process Protection**: Intercept `TerminateProcess`, `ExitProcess`
-- **Clipboard Defense**: Block `EmptyClipboard`, `SetClipboardData`
-- **Window Enumeration**: Neutralize `GetWindow`, `GetWindowText`
+### Security Testing Techniques
+- **Focus Control Testing**: Hook `SetFocus`, `SetWindowPos`, `BringWindowToTop`
+- **Process Protection Testing**: Intercept `TerminateProcess`, `ExitProcess`
+- **Clipboard Access Testing**: Hook `EmptyClipboard`, `SetClipboardData`
+- **Window Enumeration Testing**: Monitor `GetWindow`, `GetWindowText`
 
 ## 🐛 Troubleshooting
 
@@ -191,11 +257,14 @@ cd UpadtedMethod
 
 **Build Failures**
 ```powershell
-# Check Visual Studio installation
-.\build.ps1 install-deps
+# Reinstall/check dependencies
+.\build.ps1 install-deps -All               # Install everything
+.\build.ps1 install-deps -Force             # Force reinstall
 
 # Verify tools are installed
-winget list | grep -i "visual studio\|python"
+winget list | findstr "BuildTools"          # Check Visual Studio
+winget list | findstr "Python"              # Check Python
+winget list | findstr "Git"                 # Check Git
 
 # Try clean build
 .\build.ps1 clean
@@ -234,7 +303,7 @@ ls .\DLLHooks.dll
 
 **⚠️ IMPORTANT DISCLAIMER**
 - This tool is for **educational and research purposes only**
-- Bypassing security software may violate terms of service
+- Testing security software may violate terms of service
 - Use only in authorized testing environments
 - Users are responsible for compliance with local laws and policies
 - Not intended for cheating or academic dishonesty
