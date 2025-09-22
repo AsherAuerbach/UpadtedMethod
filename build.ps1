@@ -98,6 +98,14 @@ function Show-Help {
 function Invoke-Build {
     Write-Host "=== Building UpadtedMethod Project ===" -ForegroundColor Magenta
 
+    # Ensure logs directory exists for logging infrastructure
+    $LogsDir = Join-Path $ProjectRoot "logs"
+    if (-not (Test-Path $LogsDir)) {
+        Write-Host "Creating logs directory for logging infrastructure..." -ForegroundColor Yellow
+        New-Item -ItemType Directory -Force -Path $LogsDir | Out-Null
+        Write-Host "Logs directory created: $LogsDir" -ForegroundColor Cyan
+    }
+
     $BuildArgs = @()
     if ($Configuration) { $BuildArgs += "-Configuration", $Configuration }
     if ($Platform) { $BuildArgs += "-Platform", $Platform }

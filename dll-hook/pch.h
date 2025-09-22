@@ -9,5 +9,17 @@
 
 // add headers that you want to pre-compile here
 #include "framework.h"
+#include "logging.h"
+
+// Standard C++ headers for logging infrastructure
+#include <memory>
+#include <string>
+#include <chrono>
+#include <mutex>
+#include <atomic>
+#include <filesystem>
+#include <algorithm>
+#include <cctype>
+#include <exception>
 
 #endif //PCH_H

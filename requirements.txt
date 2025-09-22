@@ -4,3 +4,12 @@ pywinctl
 Pillow
 PyQt5
 keyboard
+
+# Development and testing dependencies
+ruff>=0.0.250        # Fast Python linter and formatter
+mypy>=1.0.0          # Static type checker
+pytest>=7.0.0        # Testing framework
+pytest-cov>=4.0.0    # Coverage reporting for tests
+pytest-html>=3.0.0   # HTML test reports
+pytest-mock>=3.0.0   # Enhanced mocking for pytest
+pytest-xdist>=3.0.0  # Parallel test execution

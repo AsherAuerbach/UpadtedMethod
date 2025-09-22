@@ -6,6 +6,12 @@ __pycache__/
 # C extensions
 *.so
 
+# C++ build artifacts
+*.obj
+*.pdb
+bin/
+obj/
+
 # Distribution / packaging
 .Python
 build/
@@ -165,6 +171,9 @@ dmypy.json
 # Cython debug symbols
 cython_debug/
 
+#playwright
+.playwright-mcp/
+.playwright*/
 # PyCharm
 #  JetBrains specific template is maintained in a separate JetBrains.gitignore that can
 #  be found at https://github.com/github/gitignore/blob/main/Global/JetBrains.gitignore
@@ -210,3 +219,8 @@ package-lock.json
 .mypy_cache/
 .pytest_cache/
 .ruff_cache/
+
+*.dll
+test_results*
+test*results*
+logging-results*

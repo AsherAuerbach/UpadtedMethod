@@ -1,6 +1,7 @@
 {
 	"servers": {
 		"playwright": {
+			"type": "stdio",
 			"command": "npx",
 			"args": [
 			  "@playwright/mcp@latest"
@@ -8,13 +9,8 @@
 		  },
 
 		"context7": {
-			"command": "npx",
-			"args": [
-				"-y",
-				"@playwright/mcp@latest"
-			],
-			"type": "stdio"
+			"url": "https://mcp.context7.com/mcp",
+			"type": "http"
 		}
 	}
-
 }

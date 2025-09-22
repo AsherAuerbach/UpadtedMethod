@@ -25,6 +25,14 @@ $IntermediateDir = Join-Path $ProjectRoot "obj" $Configuration $Platform
 New-Item -ItemType Directory -Force -Path $OutputDir | Out-Null
 New-Item -ItemType Directory -Force -Path $IntermediateDir | Out-Null
 
+# Create logs directory for C++ logging infrastructure
+$LogsDir = Join-Path $ProjectRoot "logs"
+if (-not (Test-Path $LogsDir)) {
+    Write-Host "Creating logs directory for C++ logging..." -ForegroundColor Yellow
+    New-Item -ItemType Directory -Force -Path $LogsDir | Out-Null
+    Write-Host "Logs directory created: $LogsDir" -ForegroundColor Cyan
+}
+
 # Find Visual Studio installation
 $VsWhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
 if (Test-Path $VsWhere) {
@@ -104,30 +112,42 @@ $LinkerFlags = @(
     "windowscodecs.lib"
 )
 
-# Build command template
+# Create compiler and linker command strings
+$CompilerCommand = "cl.exe " + ($CompilerFlags -join ' ') + " logging.cpp dllmain.cpp"
+$LinkerCommand = "link.exe " + ($LinkerFlags -join ' ') + " `"$IntermediateDir\pch.obj`" `"$IntermediateDir\logging.obj`" `"$IntermediateDir\dllmain.obj`""
+
+# Build command template - use shorter command lines
 $BuildTemplate = @"
 @echo off
 call "$VcVarsPath" $Platform
 cd /d "$CppDir"
 
 echo Compiling precompiled header...
-cl.exe /c /std:c++17 /W3 /EHsc /nologo /Fo"$IntermediateDir\" $OptimizationFlags $RuntimeLibrary $PlatformDefines /D_CRT_SECURE_NO_WARNINGS /DWIN32 /D_WINDOWS /D_USRDLL /DUNICODE /D_UNICODE /Yc"pch.h" /Fp"$IntermediateDir\pch.pch" pch.cpp
+cl.exe /c /std:c++17 /W3 /EHsc /nologo /Fo"$IntermediateDir\\" $OptimizationFlags $RuntimeLibrary $PlatformDefines /D_CRT_SECURE_NO_WARNINGS /DWIN32 /D_WINDOWS /D_USRDLL /DUNICODE /D_UNICODE /Yc"pch.h" /Fp"$IntermediateDir\\pch.pch" pch.cpp
 
 if %ERRORLEVEL% neq 0 (
     echo Failed to compile precompiled header
     exit /b %ERRORLEVEL%
 )
 
-echo Compiling source files...
-cl.exe $($CompilerFlags -join ' ') dllmain.cpp
+echo Compiling logging.cpp...
+cl.exe /c /std:c++17 /W3 /EHsc /nologo /Fo"$IntermediateDir\\" $OptimizationFlags $RuntimeLibrary $PlatformDefines /D_CRT_SECURE_NO_WARNINGS /DWIN32 /D_WINDOWS /D_USRDLL /DUNICODE /D_UNICODE /Yu"pch.h" /Fp"$IntermediateDir\\pch.pch" logging.cpp
 
 if %ERRORLEVEL% neq 0 (
-    echo Failed to compile source files
+    echo Failed to compile logging.cpp
+    exit /b %ERRORLEVEL%
+)
+
+echo Compiling dllmain.cpp...
+cl.exe /c /std:c++17 /W3 /EHsc /nologo /Fo"$IntermediateDir\\" $OptimizationFlags $RuntimeLibrary $PlatformDefines /D_CRT_SECURE_NO_WARNINGS /DWIN32 /D_WINDOWS /D_USRDLL /DUNICODE /D_UNICODE /Yu"pch.h" /Fp"$IntermediateDir\\pch.pch" dllmain.cpp
+
+if %ERRORLEVEL% neq 0 (
+    echo Failed to compile dllmain.cpp
     exit /b %ERRORLEVEL%
 )
 
 echo Linking DLL...
-link.exe $($LinkerFlags -join ' ') "$IntermediateDir\pch.obj" "$IntermediateDir\dllmain.obj"
+$LinkerCommand
 
 if %ERRORLEVEL% neq 0 (
     echo Failed to link DLL

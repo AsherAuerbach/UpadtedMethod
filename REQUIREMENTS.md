@@ -84,7 +84,7 @@ BOOL UnhookAllAPIs();      // Clean teardown
 - **REQ-026**: 100% type annotation coverage (Python)
 - **REQ-027**: Modern C++17 patterns and RAII
 - **REQ-028**: Comprehensive error handling
-- **REQ-029**: Zero compiler warnings on build
+- **REQ-029**: No 'big' compiler warnings on build
 - **REQ-030**: Ruff linting compliance (Python)
 - **REQ-031**: File and console logging setup and used by every file
 - **REQ-032**: All exceptions thrown are logged with complete stack traces
