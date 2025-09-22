@@ -1,0 +1,122 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    // ────────── Python Debugging ──────────
+    {
+      "name": "Debug Python Injector",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}\\injector\\inject.py",
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "python": "${workspaceFolder}\\.venv\\Scripts\\python.exe",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}"
+      },
+      "preLaunchTask": "Build All",
+      "stopOnEntry": false,
+      "showReturnValue": true,
+      "justMyCode": false,
+      "subProcess": true
+    },
+    {
+      "name": "Debug Python Injector (No Build)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}\\injector\\inject.py",
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "python": "${workspaceFolder}\\.venv\\Scripts\\python.exe",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}"
+      },
+      "stopOnEntry": false,
+      "showReturnValue": true,
+      "justMyCode": false,
+      "subProcess": true
+    },
+    {
+      "name": "Debug Current Python File",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${file}",
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "python": "${workspaceFolder}\\.venv\\Scripts\\python.exe",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}"
+      },
+      "stopOnEntry": false,
+      "showReturnValue": true,
+      "justMyCode": true
+    },
+
+    // ────────── C++ Debugging ──────────
+    {
+      "name": "Debug C++ DLL (Attach to Process)",
+      "type": "cppvsdbg",
+      "request": "attach",
+      "processId": "${command:pickProcess}",
+      "symbolSearchPath": "${workspaceFolder}\\bin\\Debug\\x64;${workspaceFolder}\\bin\\Release\\x64",
+      "sourceFileMap": {
+        "${workspaceFolder}\\dll-hook": "${workspaceFolder}\\dll-hook"
+      },
+      "externalConsole": false,
+      "logging": {
+        "moduleLoad": false,
+        "trace": false
+      }
+    },
+    {
+      "name": "Debug C++ DLL (Launch Test Process)",
+      "type": "cppvsdbg",
+      "request": "launch",
+      "program": "C:\\Windows\\notepad.exe",
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}",
+      "environment": [],
+      "preLaunchTask": "Build C++ DLL (Debug)",
+      "postDebugTask": "",
+      "logging": {
+        "moduleLoad": false,
+        "trace": false
+      },
+      "symbolSearchPath": "${workspaceFolder}\\bin\\Debug\\x64",
+      "sourceFileMap": {
+        "${workspaceFolder}\\dll-hook": "${workspaceFolder}\\dll-hook"
+      }
+    },
+
+    // ────────── Compound Configurations ──────────
+    {
+      "name": "Debug Full Injection Process",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}\\injector\\inject.py",
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "python": "${workspaceFolder}\\.venv\\Scripts\\python.exe",
+      "env": {
+        "PYTHONPATH": "${workspaceFolder}"
+      },
+      "preLaunchTask": "Build All",
+      "stopOnEntry": false,
+      "showReturnValue": true,
+      "justMyCode": false,
+      "subProcess": true,
+      "postDebugTask": ""
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Debug Python + C++ (Manual Attach)",
+      "configurations": [
+        "Debug Python Injector (No Build)",
+        "Debug C++ DLL (Attach to Process)"
+      ],
+      "stopAll": true,
+      "preLaunchTask": "Build All"
+    }
+  ]
+}

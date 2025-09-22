@@ -1,6 +1,0 @@
-pywin32
-psutil
-pywinctl
-Pillow
-PyQt5
-keyboard

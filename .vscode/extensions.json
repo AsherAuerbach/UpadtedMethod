@@ -1,0 +1,35 @@
+{
+  "recommendations": [
+    // ────────── Python Development ──────────
+    "ms-python.python",              // Python extension pack
+    "ms-python.pylance",             // Pylance language server (fast IntelliSense)
+    "charliermarsh.ruff",            // Ruff linter & formatter (all-in-one)
+
+    // ────────── C/C++ Development (Minimal Stack) ──────────
+    "ms-vscode.cpptools",            // C/C++ IntelliSense, debugging, and code browsing
+    "ms-vscode.cpptools-extension-pack", // C/C++ extension pack with themes and helpers
+
+    // ────────── Build & Project Management ──────────
+    "ms-vscode.cmake-tools",         // CMake support (if needed for build configuration)
+
+    // ────────── General Development ──────────
+    "ms-vscode.hexeditor",           // Hex editor (useful for DLL analysis)
+    "github.copilot",                // AI code completion
+    "github.copilot-chat",           // AI chat assistance
+
+    // ────────── Utility Extensions ──────────
+    "ms-vscode.powershell",          // PowerShell support (Windows development)
+    "streetsidesoftware.code-spell-checker", // Spell checker for comments and docs
+    "gruntfuggly.todo-tree"          // TODO/FIXME highlighting
+  ],
+  "unwantedRecommendations": [
+    // Conflicting or redundant extensions
+    "ms-python.flake8",              // Using Ruff instead
+    "ms-python.pylint",              // Using Ruff instead
+    "ms-python.black-formatter",     // Using Ruff instead
+    "ms-python.isort",               // Using Ruff instead
+    "ms-toolsai.jupyter",            // Not needed for this project
+    "redhat.vscode-xml",             // Not needed
+    "ms-vscode.vscode-json"          // Built-in JSON support is sufficient
+  ]
+}

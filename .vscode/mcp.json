@@ -1,0 +1,20 @@
+{
+	"servers": {
+		"playwright": {
+			"command": "npx",
+			"args": [
+			  "@playwright/mcp@latest"
+			]
+		  },
+
+		"context7": {
+			"command": "npx",
+			"args": [
+				"-y",
+				"@playwright/mcp@latest"
+			],
+			"type": "stdio"
+		}
+	}
+
+}

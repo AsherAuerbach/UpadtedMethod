@@ -1,19 +1,35 @@
-import psutil
-from injector import DLLInjector
-import time
 import os
+
+import psutil
+
+from injector import DLLInjector
 
 agent = DLLInjector()
 
-dll_file = os.path.join(os.getcwd(), "DLLHooks.dll")
-if not os.path.exists(dll_file):
-    dll_file = os.path.join(os.getcwd(), "DLLHooks/Release/DLLHooks.dll")
-    if not os.path.exists(dll_file):
-        raise FileNotFoundError("DLLHooks.dll not found in expected directories.")
+# Get the project root directory (parent of injector directory)
+project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# Try to find the DLL in various locations
+dll_paths = [
+    os.path.join(project_root, "DLLHooks.dll"),  # Root directory (compatibility)
+    os.path.join(project_root, "bin", "Release", "x64", "DLLHooks.dll"),  # New build structure
+    os.path.join(project_root, "bin", "Debug", "x64", "DLLHooks.dll"),  # Debug build
+    os.path.join(project_root, "DLLHooks", "Release", "DLLHooks.dll"),  # Legacy structure
+]
+
+dll_file = None
+for path in dll_paths:
+    if os.path.exists(path):
+        dll_file = path
+        print(f"Found DLL at: {dll_file}")
+        break
+
+if dll_file is None:
+    raise FileNotFoundError(f"DLLHooks.dll not found in any expected locations: {dll_paths}")
 
 monitored_process = "LockDownBrowser"
 
-for task in psutil.process_iter(['name']):
+for task in psutil.process_iter(["name"]):
     task_name = task.name()
     if monitored_process in task_name:
         try:
@@ -26,7 +42,7 @@ print("Monitoring for target process...")
 
 while True:
     found = False
-    for task in psutil.process_iter(['name']):
+    for task in psutil.process_iter(["name"]):
         task_name = task.name()
         if monitored_process in task_name:
             pid = task.pid
